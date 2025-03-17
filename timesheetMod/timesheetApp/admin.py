@@ -90,6 +90,7 @@ class TeamAdmin(admin.ModelAdmin):
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     list_display = [
+        "task_id",
         "name",
         "team",
         "module_name",
@@ -117,9 +118,12 @@ class TaskAdmin(admin.ModelAdmin):
     formatted_updated_at.admin_order_field = "updated_at"
     formatted_updated_at.short_description = "Updated At"
 
-
+@admin.register(Entry)
+class EntryAdmin(admin.ModelAdmin):
+    list_display=["date_entry","description","project","module","task","time_entry"]
+    
 # admin.site.register(Project,ProjectAdmin)
 # admin.site.register(Module)
 # admin.site.register(Team)
 # admin.site.register(Task)
-admin.site.register(Entry)
+# admin.site.register(Entry)

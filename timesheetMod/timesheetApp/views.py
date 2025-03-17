@@ -1,20 +1,114 @@
-from django.shortcuts import render
-from django.http import HttpResponse,HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from .models import Entry, Project, Module, Task
+
 # import logging
+
 
 # logger = logging.getLogger(__name__)
 # Create your views here.
 def index(request):
-    return render(request,"timesheetApp/index.html")
+    return render(request, "timesheetApp/index.html")
+
+
+# def enter_data(request):
+#     # logger.info(f"Request: {request}")
+#     if request.method == "POST":
+#         date_entry = request.POST.get("date", "No date received")
+#         description = request.POST.get("description", "No Data Received")
+#         project = request.POST.get("project", "No project received")
+#         module = request.POST.get("module", "No module received")
+#         task = request.POST.get("task","No task received")
+#         time_entry = request.POST.get("time","No time received")
+#         print(f"Received description: {description}")
+#         return HttpResponse(
+#             f"Received data: {description},date:{date},project:{project},module:{module},task:{task},time:{time}"
+#         )
+#     return HttpResponse("No data received")
+
 
 def enter_data(request):
-    # logger.info(f"Request: {request}")
     if request.method == "POST":
-        description = request.POST.get(
-            "description", "No Data Received"
-        )  # Safely get data
-        print(f"Received description: {description}")  # Print to console
-        return HttpResponse(
-            f"Received data: {description}"
-        )  # Display response in browser
-    return HttpResponse("No data received")
+        try:
+            date_entry = request.POST.get("date")
+            description = request.POST.get("description")
+            project_id = request.POST.get("project")
+            module_id = request.POST.get("module")
+            task_id = request.POST.get("task")
+            time_entry = request.POST.get("time")
+
+            if not all(
+                [date_entry, description, project_id, module_id, task_id, time_entry]
+            ):
+                return JsonResponse({"error": "All fields are required"}, status=400)
+            # Fetch related objects
+            project = get_object_or_404(Project, project_id=project_id)
+            module = get_object_or_404(Module, module_id=module_id)
+            task = get_object_or_404(Task, task_id=task_id)
+
+            # Convert time_entry to integer
+            time_entry = int(time_entry) if time_entry.isdigit() else 0
+
+            # check if task,module and project match
+            if int(task.module.module_id) == int(module_id) and int(
+                task.module.project.project_id
+            ) == int(project_id):
+                # Create and save the Entry object
+                entry = Entry.objects.create(
+                    date_entry=date_entry,
+                    description=description,
+                    project=project,
+                    module=module,
+                    task=task,
+                    time_entry=time_entry,
+                )
+
+                return JsonResponse(
+                    {"message": "Entry saved successfully", "entry_id": entry.entry_id}
+                )
+            else:
+                return JsonResponse({"message:": "Invalid Project-Module-Task!"})
+
+        except Exception as e:
+            return JsonResponse({"server-error": f"{e}"})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+def get_projects(request):
+    # projects = {
+    #     { id: 1, "name": "Project Alpha" },
+    #     { id: 2, "name": "Project Beta" },
+    #     { id: 3, "name": "Project Gamma" }
+    # }
+    projects = list(Project.objects.all().values("project_id", "name"))
+    responseData = {"projects": projects}
+    return JsonResponse(responseData)
+
+
+def get_modules(request):
+    # http://127.0.0.1:8000/timesheet/getModules/?project_id=3
+    project_id = request.GET.get("project_id")  # Get project_id from query params
+    if not project_id:
+        return JsonResponse({"error": "project_id is required"}, status=400)
+
+    modules = list(
+        Module.objects.filter(project_id=project_id).values("module_id", "name")
+    )
+    return JsonResponse({"modules": modules})
+
+
+def get_tasks(request):
+    # http://127.0.0.1:8000/timesheet/getTasks/?module_id=16
+    module_id = request.GET.get("module_id")
+    if not (module_id):
+        return JsonResponse({"error": "project_id is required and module_id is required"}, status=400)
+
+    tasks = list(Task.objects.filter(module_id=module_id).values("task_id", "name"))
+    return JsonResponse({"tasks": tasks})
+
+def get_entries(request):
+    entries = list(Entry.objects.all().values("entry_id", "date_entry","description","project__name","module__name","task__name","time_entry"))
+    responseData = {"entries": entries}
+    return JsonResponse(responseData)
+
