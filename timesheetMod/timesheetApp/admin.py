@@ -120,7 +120,7 @@ class TaskAdmin(admin.ModelAdmin):
 
 @admin.register(Entry)
 class EntryAdmin(admin.ModelAdmin):
-    list_display=["date_entry","description","project","module","task","time_entry"]
+    list_display=["entry_id","date_entry","description","project","module","task","time_entry"]
     
 # admin.site.register(Project,ProjectAdmin)
 # admin.site.register(Module)

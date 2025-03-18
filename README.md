@@ -28,23 +28,7 @@
     1. Change into timesheetMod directory from timesheet directory:
         - `cd timesheetMod`
 
-6. Make migrations:
-    - Current directory:
-        - ~/timesheet/timesheetMod
-    
-    - Run this command to make migrations:
-        - ubuntu/linux: `python3 manage.py makemigrations`
-        - windows: `python manage.py makemigrations`
-
-7. Migrate:
-    - Current directory:
-        - ~/timesheet/timesheetMod
-    
-    - Run this command to migrate:
-        - ubuntu/linux: `python3 manage.py migrate`
-        - windows: `python manage.py migrate`
-
-8. Run app/server:
+6. Run app/server:
     - Current directory:
         - ~/timesheet/timesheetMod
     
