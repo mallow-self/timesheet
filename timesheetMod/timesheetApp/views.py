@@ -45,9 +45,7 @@ def enter_data(request):
                     time_entry=time_entry,
                 )
 
-                return JsonResponse(
-                    {"message": "Entry saved successfully", "entry_id": entry.entry_id}
-                )
+                return redirect("timesheet:index")
             else:
                 return JsonResponse({"message:": "Invalid Project-Module-Task!"})
 
