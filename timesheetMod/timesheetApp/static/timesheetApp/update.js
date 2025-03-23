@@ -76,7 +76,7 @@ window.onload = setMaxDate;
 //dynamic projects loading
 function get_projects() {
     // Simulating an API call (Replace this with actual AJAX fetch)
-    fetch('/timesheet/getProjects/')
+    fetch('/getProjects/')
         .then(response => response.json())
         .then(data => {
             let select = document.getElementById("project");
@@ -104,7 +104,7 @@ document.getElementById("project").addEventListener("focus", function (event) {
 
 //dynamic modules loading
 function get_modules(project_id) {
-    fetch(`/timesheet/getModules?project_id=${project_id}`)
+    fetch(`/getModules?project_id=${project_id}`)
         .then(response => response.json())
         .then(data => {
             let select_module = document.getElementById("module");
@@ -134,7 +134,7 @@ document.getElementById("module").addEventListener("focus", function (event) {
 
 //dynamic task loading
 function get_tasks(module_id) {
-    fetch(`/timesheet/getTasks?module_id=${module_id}`)
+    fetch(`/getTasks?module_id=${module_id}`)
         .then(response => response.json())
         .then(data => {
             let select_task = document.getElementById("task");
