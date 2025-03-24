@@ -49,7 +49,6 @@ def get_entries(request):
             "task__name",
             "time_entry",
         )
-        .order_by("-date_entry")
     )
     responseData = {"entries": entries}
     return JsonResponse(responseData)

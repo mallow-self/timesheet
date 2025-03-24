@@ -1,0 +1,28 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entry Form</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'timesheetApp/formCss.css' %}" />
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="title">Timesheet Entry</h2>
+        <form onsubmit="return validation()" class="formItem" method="post" id="entry-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    {% comment %}
+    <script>let getProjectsUrl = "{% url 'timesheet:get_modul' %}";</script> {% endcomment %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'timesheetApp/form.js' %}"></script>
+
+</body>
+
+</html>
