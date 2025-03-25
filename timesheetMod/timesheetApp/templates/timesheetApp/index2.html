@@ -14,8 +14,10 @@
 <body>
     <div class="container mt-5">
         <div class="entries-area">
-            <h2 class="mb-3">Entries</h2>
-
+            <div class="row">
+                <h2 class="col mb-3">Entries</h2>
+                <a href="{% url 'timesheet:entry_form'%}" class="col mb-3"><button>Add</button></a>
+            </div>
             <div class="table-responsive">
                 <table id="entriesTable" class="table table-bordered table-hover table-striped">
                     <thead class="table-dark">

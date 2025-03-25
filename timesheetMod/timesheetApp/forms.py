@@ -59,10 +59,51 @@ class EntryForm(forms.ModelForm):
         fields = ['date_entry', 'description',
                   'project', 'module', 'task', 'time_entry']
         
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+
+    #     # Get project ID from POST data if available
+    #     if 'project' in self.data:
+    #         try:
+    #             project_id = int(self.data.get('project'))
+    #             self.fields['module'].queryset = Module.objects.filter(
+    #                 project_id=project_id)
+    #             self.fields['task'].queryset = Task.objects.filter(
+    #                 module__project_id=project_id)
+    #         except (ValueError, TypeError):
+    #             pass  # If project_id is invalid, keep queryset empty
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+
+    #     if 'project' in self.data:
+    #         try:
+    #             project_id = int(self.data.get('project'))
+    #             self.fields['module'].queryset = Module.objects.filter(
+    #                 project_id=project_id)
+    #             self.fields['task'].queryset = Task.objects.filter(
+    #                 module__project_id=project_id)
+    #         except (ValueError, TypeError):
+    #             pass  # Keep queryset empty if invalid input
+
+    #     # if self.instance and self.instance.project:
+    #     #     self.fields['module'].queryset = Module.objects.filter(
+    #     #         project=self.instance.project)
+    #     #     self.fields['task'].queryset = Task.objects.filter(
+    #     #         module__project=self.instance.project)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Get project ID from POST data if available
+        # Ensure project exists before accessing it
+        if self.instance and self.instance.project_id:
+            self.fields['module'].queryset = Module.objects.filter(
+                project=self.instance.project)
+            self.fields['task'].queryset = Task.objects.filter(
+                module__project=self.instance.project)
+        else:
+            self.fields['module'].queryset = Module.objects.none()
+            self.fields['task'].queryset = Task.objects.none()
+
+        # Handle dynamically selected project in POST request
         if 'project' in self.data:
             try:
                 project_id = int(self.data.get('project'))
@@ -71,4 +112,4 @@ class EntryForm(forms.ModelForm):
                 self.fields['task'].queryset = Task.objects.filter(
                     module__project_id=project_id)
             except (ValueError, TypeError):
-                pass  # If project_id is invalid, keep queryset empty
+                pass  # Keep queryset empty if invalid input
