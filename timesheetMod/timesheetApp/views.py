@@ -5,55 +5,6 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import EntryForm
 
 # Create your views here.
-def index(request):
-    return render(request, "timesheetApp/index.html")
-
-
-def enter_data(request):
-    if request.method == "POST":
-        try:
-            date_entry = request.POST.get("date")
-            description = request.POST.get("description")
-            project_id = request.POST.get("project")
-            module_id = request.POST.get("module")
-            task_id = request.POST.get("task")
-            time_entry = request.POST.get("time")
-
-            if not all(
-                [date_entry, description, project_id, module_id, task_id, time_entry]
-            ):
-                return JsonResponse({"error": "All fields are required"}, status=400)
-            # Fetch related objects
-            project = get_object_or_404(Project, project_id=project_id)
-            module = get_object_or_404(Module, module_id=module_id)
-            task = get_object_or_404(Task, task_id=task_id)
-
-            # Convert time_entry to integer
-            time_entry = int(time_entry) if time_entry.isdigit() else 0
-
-            # check if task,module and project match
-            if int(task.module.module_id) == int(module_id) and int(
-                task.module.project.project_id
-            ) == int(project_id):
-                # Create and save the Entry object
-                entry = Entry.objects.create(
-                    date_entry=date_entry,
-                    description=description,
-                    project=project,
-                    module=module,
-                    task=task,
-                    time_entry=time_entry,
-                )
-
-                return redirect("timesheet:index")
-            else:
-                return JsonResponse({"message:": "Invalid Project-Module-Task!"})
-
-        except Exception as e:
-            return JsonResponse({"server-error": f"{e}"})
-
-    return JsonResponse({"error": "Invalid request"}, status=400)
-
 
 @csrf_exempt
 def delete_entry(request, entry_id):
@@ -63,7 +14,6 @@ def delete_entry(request, entry_id):
         return JsonResponse({"success": True, "message": "Entry deleted successfully!"})
 
     return JsonResponse({"error": "Invalid request method"}, status=400)
-
 
 def update_entry(request, entry_id):
     entry = get_object_or_404(Entry, entry_id=entry_id)
@@ -128,7 +78,6 @@ def update_form(request,entry_id):
     except Exception as e:
         return JsonResponse({"Exception Occurred:": f"{e}"})
 
-
 #django model form
 def entryForm(request):
     if request.method == "POST":
@@ -143,18 +92,6 @@ def entryForm(request):
     form = EntryForm()
     context = {"form": form}
     return render(request, 'timesheetApp/entryForm.html',context=context)
-
-
-# def load_modules(request):
-#     project_id = request.GET.get('project_id')
-#     modules = Module.objects.filter(project_id=project_id).values('id', 'name')
-#     return JsonResponse(list(modules), safe=False)
-
-
-# def load_tasks(request):
-#     module_id = request.GET.get('module_id')
-#     tasks = Task.objects.filter(module_id=module_id).values('id', 'name')
-#     return JsonResponse(list(tasks), safe=False)
 
 def index2(request):
     return render(request, "timesheetApp/index2.html")

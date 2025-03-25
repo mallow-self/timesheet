@@ -5,8 +5,6 @@ from . import reads
 
 app_name = "timesheet"
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("data/", views.enter_data, name="enter_data"),
     path("getProjects/", reads.get_projects, name="get_projects"),
     path("getModules/", reads.get_modules, name="get_modules"),
     path("getTasks/", reads.get_tasks, name="get_tasks"),
