@@ -1,6 +1,6 @@
 from django import forms
 from .models import Entry, Project, Module, Task
-
+from asgiref.sync import sync_to_async
 
 class EntryForm(forms.ModelForm):
     TIME_CHOICES = [
@@ -58,38 +58,7 @@ class EntryForm(forms.ModelForm):
         model = Entry
         fields = ['date_entry', 'description',
                   'project', 'module', 'task', 'time_entry']
-        
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
 
-    #     # Get project ID from POST data if available
-    #     if 'project' in self.data:
-    #         try:
-    #             project_id = int(self.data.get('project'))
-    #             self.fields['module'].queryset = Module.objects.filter(
-    #                 project_id=project_id)
-    #             self.fields['task'].queryset = Task.objects.filter(
-    #                 module__project_id=project_id)
-    #         except (ValueError, TypeError):
-    #             pass  # If project_id is invalid, keep queryset empty
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-
-    #     if 'project' in self.data:
-    #         try:
-    #             project_id = int(self.data.get('project'))
-    #             self.fields['module'].queryset = Module.objects.filter(
-    #                 project_id=project_id)
-    #             self.fields['task'].queryset = Task.objects.filter(
-    #                 module__project_id=project_id)
-    #         except (ValueError, TypeError):
-    #             pass  # Keep queryset empty if invalid input
-
-    #     # if self.instance and self.instance.project:
-    #     #     self.fields['module'].queryset = Module.objects.filter(
-    #     #         project=self.instance.project)
-    #     #     self.fields['task'].queryset = Task.objects.filter(
-    #     #         module__project=self.instance.project)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
