@@ -14,6 +14,7 @@ $(document).ready(function () {
 
             let taskDropdown = $("#task-dropdown");
             taskDropdown.empty();
+            taskDropdown.append('<option value="" selected>Select a task</option>');
 
             $.each(data.modules, function (index, module) {
                 moduleDropdown.append(`<option value="${module.module_id}">${module.name}</option>`);
