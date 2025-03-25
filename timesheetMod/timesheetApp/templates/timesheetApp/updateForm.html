@@ -1,0 +1,25 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entry Form</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'timesheetApp/formCss.css' %}" />
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="title">Timesheet Entry</h2>
+        <form onsubmit="return validation()" class="formItem" method="post" id="entry-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'timesheetApp/update-1.js' %}"></script>
+
+</body>
+
+</html>
