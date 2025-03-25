@@ -10,7 +10,7 @@
 
 <body>
     <div class="container">
-        <h2 class="title">Timesheet Entry</h2>
+        <h2 class="title">Timesheet Entry Update</h2>
         <form onsubmit="return validation()" class="formItem" method="post" id="entry-form">
             {% csrf_token %}
             {{ form.as_p }}
